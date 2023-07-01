@@ -25,7 +25,6 @@ public class BaseClass {
 		//System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir")+ "//Drivers//chromedriver.exe");
 		System.setProperty("webdriver.chrome.driver", "C://Users//shah4//eclipse-workspace//InetBankingV2//Drivers//chromedriver.exe");
 		driver = new ChromeDriver();
-		driver = new FirefoxDriver();
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 		driver.manage().window().maximize();
 		
