@@ -5,7 +5,6 @@ import java.time.Duration;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 
@@ -18,7 +17,6 @@ public class BaseClass {
 	public static WebDriver driver;
 
 	@BeforeClass 
-	// setup method
 	public void setup() {
 		System.setProperty("webdriver.http.factory", "jdk-http-client");
 
