@@ -2,8 +2,14 @@ package com.inetbanking2.utilities;
 
 // Listener class used to generate Extent reports
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.TestListenerAdapter;
@@ -13,9 +19,10 @@ import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import com.aventstack.extentreports.reporter.configuration.Theme;
 
 public class Reporting extends TestListenerAdapter {
+	static WebDriver driver;
 	ExtentReports extent = new ExtentReports();
 	String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());// time stamp
-	String repName = "./\\Extent Reports\\"+"ExtentReport-Spark" + timeStamp + ".html";
+	String repName = "./\\Extent Reports\\" + "ExtentReport-Spark" + timeStamp + ".html";
 	ExtentSparkReporter spark = new ExtentSparkReporter(repName); // repName = specify location
 
 	public static ExtentTest test;
@@ -38,19 +45,22 @@ public class Reporting extends TestListenerAdapter {
 		test = extent.createTest(tr.getName()); // create new entry in the report
 		test.fail(tr.getName()); // send the failed information in the extent report
 		
-		String screenshotPath = System.getProperty("user.dir") + "\\Screenshots\\" + tr.getName() + ".png";
-
-		File f = new File(screenshotPath);
-
-		if (f.exists()) {
-			try {
-				//test.fail("Screenshot is below: " + test.addScreenCaptureFromPath(screenshotPath));
-				test.addScreenCaptureFromPath(screenshotPath);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+//		String screenshotPath = System.getProperty("user.dir")+"\\Screenshots\\" + tr.getName()+ ".png";
+//		
+//		File f = new File(screenshotPath);
+//		
+//		if(f.exists()) {
+//			test.fail("Screenshot is below: "+ test.addScreenCaptureFromPath(screenshotPath));
+//		}
+		
+		String path = "";
+		try {
+			path = capturescreenshot("failed");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-
+		test.addScreenCaptureFromPath(path);
 	}
 
 	public void onTestSkipped(ITestResult tr) {
@@ -62,12 +72,20 @@ public class Reporting extends TestListenerAdapter {
 		extent.flush();
 	}
 
-	/*
-	 * public static String capturescreenshot(WebDriver driver) throws IOException {
-	 * File srcfile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-	 * File destinationfilepath = new File("src/../images/screenshot" +
-	 * System.currentTimeMillis() + ".png"); String absolutepathlocation =
-	 * destinationfilepath.getAbsolutePath(); FileUtils.copyFile(srcfile,
-	 * destinationfilepath); return absolutepathlocation; }
-	 */
+	public static String capturescreenshot(String fileName) throws IOException {
+		TakesScreenshot takesScreenshot = (TakesScreenshot) driver;
+		File srcfile = takesScreenshot.getScreenshotAs(OutputType.FILE);
+		File destinationfilepath = new File(System.getProperty("user.dir") + "\\Screenshots\\" + fileName + ".png");
+		String absolutepathlocation = destinationfilepath.getAbsolutePath();
+		FileUtils.copyFile(srcfile, destinationfilepath);
+		return absolutepathlocation;
+	}
+
+	public static String capturescreenshot() {
+		TakesScreenshot takesScreenshot = (TakesScreenshot) driver;
+		String base64Code = takesScreenshot.getScreenshotAs(OutputType.BASE64);
+		System.out.println("Screenshot captured successfully");
+		return base64Code;
+	}
+
 }

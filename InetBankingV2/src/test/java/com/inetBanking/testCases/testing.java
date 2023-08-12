@@ -1,27 +1,23 @@
 package com.inetBanking.testCases;
 
-import java.net.URL;
 import java.time.Duration;
-import java.util.List;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.edge.EdgeDriver;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class testing {
-	RemoteWebDriver  driver;
+	WebDriver  driver;
 
 	@BeforeClass
 	public void setup() {
-		System.setProperty("webdriver.edge.driver", System.getProperty("user.dir") + "\\Drivers\\msedgedriver.exe");
-		driver = new EdgeDriver();
+		ChromeOptions co = new ChromeOptions();
+		//co.setBrowserVersion("116");
+		co.setBinary("C:\\Users\\shah4\\.cache\\selenium\\chrome\\chrome-win64\\chrome.exe");
+		driver = new ChromeDriver(co);
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(Duration.ofMillis(10));
 	}
